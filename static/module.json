@@ -1,0 +1,29 @@
+{
+    "name": "freezing",
+    "version": "0.1",
+    "authors": "Christophe Serafin, Julien Metzmeyer",
+    "baseUrl": "http://localhost:5000/",
+    "deps": ["static/fichier.js", "static/javascript.js"],
+    "services": [
+                {"name": "customService1",
+                 "template": "static/template1.html",
+                 "controllerTarget" : "LinesCtrl"
+                },
+                {"name": "customService3",
+                 "template": "static/template2.html",
+                 "controllerTarget" : "LinesCtrl"
+                },
+                {"name": "customService2",
+                 "template": "static/template3.html",
+                 "controllerTarget" : "MouseCtrl"
+                }],
+    "routes": [{"path": "/url/to/route",
+               "template": "static/list.html",
+               "controller" : "customController1"
+                },
+             {"path": "/url/to/route/:id",
+               "template": "http://path/to/template.html",
+               "controller" : "customController2",
+               "reloadOnSearch": false
+             }]
+}

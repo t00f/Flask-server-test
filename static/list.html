@@ -1,0 +1,59 @@
+<ul class="nav pull-right">
+    <li>
+        <ng-pluralize count="lines.length" when="{'0': 'Aucune lignée','one': '1 lignée','other': '{} lignées'}">
+        </ng-pluralize>
+    </li>
+</ul>
+<p>This is the view for show lines.</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>name</th>
+            <th>comment</th>
+            <th>action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="line in lines | orderBy:['id']">
+            <td>{{line.id}}</td>
+            <td>{{line.name}}</td>
+            <td>{{line.comment}}</td>
+            <td>
+                <div class="btn-group">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="icon-cog"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right igbmc-line-menu">
+                        <li>
+                            <a ng-click="edit(line)">
+                                <i class="icon-edit"></i> Modifier
+                            </a>
+                        </li>
+                        <li>
+                            <a ng-click="remove(line)">
+                                <i class="icon-trash"></i> Supprimer / Archiver
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<br/><br/><br/>
+<div class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="navbar-inner">
+        <ul class="nav pull-left">
+            <li>
+                <a ng-click="add()">
+                    <span tooltip-placement="bottom">
+                        <i class="icon-plus"></i> Nouvelle lignée
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
