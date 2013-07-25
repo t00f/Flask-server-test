@@ -8,14 +8,6 @@
                 {"name": "customService1",
                  "template": "static/template1.html",
                  "controllerTarget" : "LinesCtrl"
-                },
-                {"name": "customService3",
-                 "template": "static/template2.html",
-                 "controllerTarget" : "LinesCtrl"
-                },
-                {"name": "customService2",
-                 "template": "static/template3.html",
-                 "controllerTarget" : "MouseCtrl"
                 }],
     "routes": [{"path": "/url/to/route",
                "template": "static/list.html",
