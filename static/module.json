@@ -3,7 +3,7 @@
     "version": "0.1",
     "authors": "Christophe Serafin, Julien Metzmeyer",
     "baseUrl": "http://localhost:5000/",
-    "deps": ["static/fichier.js", "static/javascript.js"],
+    "deps": ["static/customservice1.js", "static/javascript.js"],
     "services": [
                 {"name": "customService1",
                  "template": "static/template1.html",
