@@ -1,4 +1,9 @@
-angular.module('mouseApp').factory('customService1', function () {
+console.log("service freezing module");
+
+'use strict';
+
+/* Freezing Service */
+angular.module('mouseApp').factory('freezingServices', function () {
     return {
         /*
         This method should be call by base controllers to add features to its $scope.

@@ -1,0 +1,48 @@
+<form name="lineForm" class="form-horizontal">
+    <div class="modal-header">
+        <h3>Edition de la lignée {{ line.name }}</h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="control-label">Nom</label>
+            <div class="controls">
+                <input class="input-xlarge" type="text" name="name" ng-model="line.name" required>
+                <span ng-show="lineForm.name.$error.required" class="help-inline">*</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Symbole</label>
+            <div class="controls">
+                <input class="input-xlarge" type="text" name="symbol" ng-model="line.symbol" required>
+                <span ng-show="lineForm.symbol.$error.required" class="help-inline">*</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Privé</label>
+            <div class="controls">
+                <label class="checkbox">
+                    <input name="is_private" type="checkbox" ng-model="line.is_private" value="true">
+                    Lignées visible seulement par l'utilisateur
+                    <span class="help-inline">*</span>
+                </label>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Allèle</label>
+            <div class="controls">
+                <select ng-model="line.alleles" ng-options="allele.id as allele.name for allele in alleles" multiple="multiple" required>
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Commentaire</label>
+            <div class="controls">
+                <textarea class="input-xlarge" rows="3" name="comment" ng-model="line.comment"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer align-right">
+        <a href="#/lines" class="btn" ng-click="cancel()">Fermer</a>
+        <button ng-click="edit()" class="btn btn-primary" ng-disabled="lineForm.$invalid">Mettre à jour</button>
+    </div>
+</form>
