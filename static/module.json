@@ -2,20 +2,15 @@
     "name": "freezing",
     "version": "0.1",
     "authors": "Christophe Serafin, Julien Metzmeyer",
-    "baseUrl": "http://localhost:5000/",
-    "deps": ["static/customservice1.js", "static/javascript.js"],
+    "baseUrl": "http://localhost:5000",
+    "deps": ["/static/freezing/js/controllers.js","/static/freezing/js/services.js"],
     "services": [
-                {"name": "customService1",
-                 "template": "static/template1.html",
+                {"name": "freezingServices",
+                 "template": "/static/freezing/views/lines.list.html",
                  "controllerTarget" : "LinesCtrl"
                 }],
-    "routes": [{"path": "/url/to/route",
-               "template": "static/list.html",
-               "controller" : "customController1"
-                },
-             {"path": "/url/to/route/:id",
-               "template": "http://path/to/template.html",
-               "controller" : "customController2",
-               "reloadOnSearch": false
-             }]
+    "routes": [{"path": "/freezing",
+               "template": "/static/freezing/views/list.html",
+               "controller" : "FreezingCtrl"
+                }]
 }
