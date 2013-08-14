@@ -1,15 +1,26 @@
-from flask import Flask
+
+from config import LocalConfig
+from elixir import metadata, session
+from flask import Flask, g
+
 app = Flask(__name__)
+app.config.from_object(LocalConfig)
+# DB configuration
+metadata.bind = app.config['SQLALCHEMY_DATABASE_URI']
+metadata.echo = True
+
+session.configure(autoflush=False)
 
 from flask import Response
 from flask import json, send_file, request, request_started
-
 
 ## REQUESTS
 
 @app.before_request
 def option_autoreply():
     """ Always reply 200 on OPTIONS request """
+
+    set_pagination_infos(request.values)
 
     if request.method == 'OPTIONS':
         resp = app.make_default_options_response()
@@ -63,8 +74,87 @@ def merge_params(sender, **extra):
 request_started.connect(merge_params, app)
 
 
+def query_with_pagination(query, req):
+    from math import ceil
+
+    # Get the total count of objects
+    count = query.count()
+
+    # Query with pagination
+    #objects = query.limit(req['page_limit']).offset(req['page_offset']).all()
+    objects = query.all()
+
+    # Create a result dictionary
+    results = dict()
+    results['objects'] = objects
+    results['page_offset'] = req['page_offset']
+    results['page_limit'] = req['page_limit']
+    results['count'] = count
+    results['page_count'] = int(ceil(count / req['page_limit']))
+
+    return results
+
+def set_pagination_infos(values):
+    """ Set pagination to the global g variable"""
+    g.pagination = None
+
+    if 'page_limit' in values and 'page_offset' in values:
+        g.pagination = dict()
+        g.pagination['page_limit'] = values['page_limit']
+        g.pagination['page_offset'] = values['page_offset']
+
+#Change names to :
+#page
+#num_results
+
+from sqlalchemy import event
+from sqlalchemy.sql.expression import Select
+
+def before_execute(conn, clauseelement, multiparams, params):
+    print "Received statement: %s" % clauseelement
+    if isinstance(clauseelement, Select) and g.pagination is not None and 'isrunning' not in g.pagination:
+        # Set critical area
+        g.pagination['isrunning'] = True
+
+        from math import ceil
+
+        # Get count (another Select request!)
+        g.pagination['count'] = conn.execute(clauseelement.count()).fetchone()[0]
+        g.pagination['page_count'] = int(ceil(g.pagination['count'] / int(g.pagination['page_limit'])))
+
+        # Get information
+        clauseelement = clauseelement.limit(g.pagination['page_limit']).offset(g.pagination['page_offset'])
+
+    # Clean critical area
+    if g.pagination is not None and 'isrunning' in g.pagination:
+        g.pagination.pop('isrunning')
+
+    return (clauseelement, multiparams, params)
+
+event.listen(metadata.bind, "before_execute", before_execute, retval=True)
+
 
 ## ROUTES
+
+@app.route("/areas")
+def areas_list():
+    """ return list of areas """
+    # Create your own query as you wish
+    from models import Area
+    q = Area.query.filter(Area.name.contains('Area'))
+
+    # This part should be the request.values dictionary
+    #req = dict()
+    #req['page_limit'] = 10
+    #req['page_offset']= 100
+
+    # Query results with pagination
+    #results = query_with_pagination(q, req)
+    results = q.all()
+
+    print g.pagination
+
+    return str(results)
 
 @app.route("/")
 def home():
@@ -76,7 +166,6 @@ def image():
     """ Test for images """
 
     image = open('5323.jpg', 'rb')
-    print image
     stream = image.read()
 
     image.close()
